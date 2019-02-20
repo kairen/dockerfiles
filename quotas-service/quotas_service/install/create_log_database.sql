@@ -1,0 +1,9 @@
+DROP DATABASE IF EXISTS `log`;
+CREATE DATABASE IF NOT EXISTS `log`;
+USE `log`;
+CREATE TABLE IF NOT EXISTS `quotas`
+(	`created` TIMESTAMP NOT NULL ,
+	`project_id` VARCHAR(255) NOT NULL,
+	`resource` VARCHAR(255) NOT NULL,
+	`in_use` INT(11) NOT NULL);
+GRANT SELECT,DELETE ON `log`.* TO `log`@`localhost` IDENTIFIED BY 'log';

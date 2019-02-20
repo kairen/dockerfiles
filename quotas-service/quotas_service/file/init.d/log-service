@@ -1,0 +1,40 @@
+#!/bin/bash
+
+RETVAL=0;
+Name="Log Service";
+
+start() {
+	echo "Starting $Name"
+	python "/opt/log/service/loop_fetcher.py" &
+	python "/opt/log/web/manage.py" runserver 0.0.0.0:8080 > "/var/log/log_service/web_service" &
+}
+
+stop() {
+	python "/opt/log/service/close_looper_fetcher.py" &
+	pkill -xf 'python /opt/log/web/manage.py runserver 0.0.0.0:8080'
+	pkill -xf '/usr/bin/python /opt/log/web/manage.py runserver 0.0.0.0:8080'
+	echo "Stopping $Name"
+}
+
+restart() {
+	stop
+	start
+}
+
+case $1 in
+	"start")
+  		start
+;;
+	"stop")
+  		stop
+;;
+	"restart")
+  		restart
+;;
+*)
+
+echo "Usage: "$0" "$1
+exit 1
+esac
+
+exit $RETVAL
